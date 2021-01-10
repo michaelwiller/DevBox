@@ -1,5 +1,5 @@
 Vagrant.configure("2") do |config|
-  config.vm.box = "ubuntu/bionic64"
+  config.vm.box = "ubuntu/groovy64"
 
   config.vm.provider :virtualbox do |v|
     v.gui = true
@@ -7,10 +7,6 @@ Vagrant.configure("2") do |config|
     v.memory = 8096
     v.cpus = 6
   end
-
-  # Currently "ubuntu/bionic64" on VirtualBox requires `type: "virtualbox"`
-  # to make synced folder works.
-  config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
 
   # Add Google Chrome repository
   config.vm.provision :shell, inline: "wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub|sudo apt-key add -"
@@ -29,17 +25,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision :shell, inline: "sudo usermod -a -G sudo vagrant"
 
   # Add Google Chrome
-  config.vm.provision :shell, inline: "sudo apt install -y google-chrome-stable"
-
-  # Add Chromium
-  config.vm.provision :shell, inline: "sudo apt install -y chromium-browser"
-
-  # Add Firefox
-  config.vm.provision :shell, inline: "sudo apt install -y firefox"
-
-  # Add Japanese support
-  config.vm.provision :shell, inline: "sudo apt install -y fcitx-mozc"
-  config.vm.provision :shell, inline: "sudo apt install -y fonts-noto"
+  config.vm.provision :shell, inline: "sudo apt install -y ansible"
 
   # Restart
   config.vm.provision :shell, inline: "sudo shutdown -r now"
