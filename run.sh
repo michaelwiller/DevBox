@@ -3,11 +3,11 @@
 case $1 in
 
 	start)
-		echo vagrant up
+		vagrant up
 		;;
 
 	stop)
-		echo vagrant halt
+		vagrant halt
 		;;
 	
 	reset)
@@ -19,17 +19,17 @@ case $1 in
 		;;
 	
 	destroy)
-		echo vagrant destroy
+		vagrant destroy
 		;;
 	
 	create)
 		echo "Refresh ssh certificate"
 		rm -f .ssh/id*
 		cp ~/.ssh/id* .ssh/
-		echo vagrant up
+		$0 start
 		;;
 	apply)
-		echo Apply Ansible provisioning
+		echo Apply Ansible provisioning (missing)
 		;;
 	*)
 		echo "usage: $0 start|stop|reset|destroy|create|apply"
