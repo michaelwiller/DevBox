@@ -46,6 +46,7 @@ case $1 in
 		echo "values:" >> $$.yml
 		echo "  myval: true" >> $$.yml
 		vagrant ssh -c "sudo cp /vagrant/$$.yml /var/ansible-secrets"
+		rm ¤¤.yml
 		echo "Apply Ansible provisioning $prov"
 		for a in $prov; do
 		  b=$(basename $a)

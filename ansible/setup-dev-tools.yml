@@ -4,3 +4,19 @@
     debug:
       msg: System {{ inventory_hostname }}
 
+  - name: DEV - Chrome
+    become: true
+    shell: |
+      wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub
+      echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google.list
+
+  - name: DEV - Apt update
+    become: true
+    apt:
+      update_cache: yes
+      upgrade: yes
+
+  - name: DEV - Install Google Chrome
+    become: true
+    apt:
+      name: google-chrome-stable
