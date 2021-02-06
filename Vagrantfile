@@ -21,12 +21,11 @@ Vagrant.configure("2") do |config|
   # Add desktop environment
   config.vm.provision :shell, inline: "sudo apt install -y --no-install-recommends ubuntu-desktop"
   config.vm.provision :shell, inline: "sudo apt install -y --no-install-recommends virtualbox-guest-dkms virtualbox-guest-utils virtualbox-guest-x11"
+
   # Add `vagrant` to Administrator
   config.vm.provision :shell, inline: "sudo usermod -a -G sudo vagrant"
 
-  # Add Google Chrome
-  config.vm.provision :shell, inline: "sudo apt install -y ansible"
+  # Run internal provisioning
+  config.vm.provision :shell, inline: "sudo /vagrant/provision.sh"
 
-  # Restart
-  config.vm.provision :shell, inline: "sudo shutdown -r now"
 end

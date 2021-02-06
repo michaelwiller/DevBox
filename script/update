@@ -1,0 +1,32 @@
+#!/usr/bin/env bash 
+# Normalized script pattern: https://github.blog/2015-06-30-scripts-to-rule-them-all/ ( https://github.com/github/scripts-to-rule-them-all )
+# update is used to update the project after a fresh pull.
+
+echo "==========================="
+echo "Running: script/update"
+echo "==========================="
+echo " "
+echo " "
+
+
+# DIR points to the ./script directory. ROOT point to the repository root
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ROOT=$(cd $(dirname $DIR) && pwd)
+
+# Set up environment variables, if _env exists
+[ -f $DIR/_env ] && source $DIR/_env || echo "INFO: no environment .. continuing" 
+
+echo "Call script/setup"
+$ROOT/script/setup
+[ $? -gt 0 ] && exit 1
+ 
+
+echo "Update: will destroy environment and set it up again!!!"
+echo "        All uncommitted work in the VM will be lost!"
+echo "To update: Answer Y when Vagrant ask for ok to destroy. "
+echo "To cancel: Answer N if you don\'t want to update the environment"
+vagrant destroy && vagrant up
+ 
+echo "==========================="
+echo "done: script/update"
+echo "==========================="
