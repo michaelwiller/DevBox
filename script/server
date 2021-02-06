@@ -3,7 +3,7 @@
 # server is used to start the application.
 
 echo "==========================="
-echo "Running: script/server"
+echo "Running: script/server $@"
 echo "==========================="
 echo " "
 echo " "
@@ -16,8 +16,41 @@ ROOT=$(cd $(dirname $DIR) && pwd)
 # Set up environment variables, if _env exists
 [ -f $DIR/_env ] && source $DIR/_env || echo "INFO: no environment .. continuing" 
 
-echo No-op
- 
+# ============================================
+# Add server code below
+#
+
+
+
+[ ! -d .external-config/ssh ] && mkdir -p .external-config/ssh
+[ ! -d .external-config/env ] && mkdir -p .external-config/env
+
+[ $# -eq 0 ] && CMD=start || CMD=$1
+
+case $CMD in
+	start)
+		echo "Call script/setup"
+		$ROOT/script/setup
+		[ $? -gt 0 ] && exit 1
+		vagrant up
+		vagrant reload
+		;;
+	stop)
+		vagrant halt
+		;;
+	destroy)
+		vagrant destroy -f && echo "Server destroyed"
+		;;
+	reset)
+		$DIR/server destroy
+		$DIR/server start
+		;;
+esac
+
+#
+# END add server code
+# ============================================
+
 echo "==========================="
-echo "done: script/server"
+echo "done: script/server $@"
 echo "==========================="

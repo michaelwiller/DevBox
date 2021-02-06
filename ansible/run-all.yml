@@ -1,9 +1,0 @@
-- hosts: localhost
-  tasks: 
-    - name:
-      include_vars:
-        file: /var/ansible-secrets
-
-- name: Include playbook for development tools
-  import_playbook: setup-dev-tools.yml
-

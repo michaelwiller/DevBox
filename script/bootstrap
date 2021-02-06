@@ -17,9 +17,6 @@ echo " "
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOT=$(cd $(dirname $DIR) && pwd)
 
-# Set up environment variables, if _env exists
-[ -f $DIR/_env ] && source $DIR/_env
-
 # ============================================
 # Add bootstrapt code below
 #
@@ -45,11 +42,17 @@ if [ -d $HOME/.ssh ]; then
     fi
 fi
 
-if [ -f $DIR/_env ]; then
+if [ -f $HOME/.config/secrets-set-env ]; then
     print_status "Env" "OK"
 else
-    print_status "Env" "WARNING - $DIR/_env not found."
+    print_status "Env" "ERROR"
+    ERROR_STRING="${ERROR_STRING}The \$HOME/.config/secrets-set-env not found\n"
+    exit 1
 fi
+
+
+# Set up environment variables, if _env exists
+[ -f $DIR/_env ] && source $DIR/_env
 
 if [ -z "$EDBREPO_USER" ]; then
     ERROR_STRING="${ERROR_STRING}EDBREPO_USER must contain username for EDB Repositories\n"

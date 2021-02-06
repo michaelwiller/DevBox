@@ -16,16 +16,22 @@ ROOT=$(cd $(dirname $DIR) && pwd)
 # Set up environment variables, if _env exists
 [ -f $DIR/_env ] && source $DIR/_env || echo "INFO: no environment .. continuing" 
 
+ 
+# ============================================
+# Add server code below
+#
+
 echo "Call script/setup"
 $ROOT/script/setup
 [ $? -gt 0 ] && exit 1
- 
+cd $ROOT
 
-echo "Update: will destroy environment and set it up again!!!"
-echo "        All uncommitted work in the VM will be lost!"
-echo "To update: Answer Y when Vagrant ask for ok to destroy. "
-echo "To cancel: Answer N if you don\'t want to update the environment"
-vagrant destroy && vagrant up
+vagrant status | grep "running" >> /dev/null && vagrant reload || vagrant up
+vagrant ssh -c "sudo /vagrant/provision.sh"
+
+#
+# END add server code
+# ============================================
  
 echo "==========================="
 echo "done: script/update"

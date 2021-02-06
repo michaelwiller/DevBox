@@ -17,8 +17,7 @@ ROOT=$(cd $(dirname $DIR) && pwd)
 [ -f $DIR/_env ] && source $DIR/_env || echo "INFO: no environment .. continuing" 
 
 echo "Call script/bootstrap"
-$ROOT/script/bootstrap
-[ $? -gt 0 ] && exit 1
+$ROOT/script/bootstrap || exit 1
  
 # ============================================
 # Add setup code below
@@ -26,11 +25,11 @@ $ROOT/script/bootstrap
 
 cd $ROOT
 
-[ ! -d .ssh-copies/ssh ] && mkdir -p .copies/ssh
-[ ! -d .ssh-copies/env ] && mkdir -p .copies/env
+[ ! -d .external-config/ssh ] && mkdir -p .external-config/ssh
+[ ! -d .external-config/env ] && mkdir -p .external-config/env
 
-cp $HOME/.ssh/* .copies/ssh/
-cp $HOME/.config/env-secrets .copies/env/
+cp $HOME/.ssh/* .external-config/ssh/
+cp $HOME/.config/secrets-set-env .external-config/env/
 
 #
 # END add setup code
