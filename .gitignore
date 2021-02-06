@@ -2,3 +2,4 @@
 *.log
 .vagrant
 .external-config/
+.config

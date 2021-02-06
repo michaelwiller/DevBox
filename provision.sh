@@ -14,4 +14,19 @@ if [ ! -f /var/.provision.done ]; then
     shutdown -r now
 fi
 
+# Clone default repositories
+[ ! -d /vagrant/source ] && mkdir /vagrant/source
+cd /vagrant/source
+for l in $(cat /vagrant/repositories.txt)
+do
+    (
+        repo=$(echo $l | cut -f 1 -d ':')
+        dir=$(echo $l | cut -f 2 -d ':')
+        if [ ! -d $dir ]; then
+            git clone $repo $dir
+        fi
+    )
+done
+
+# Install packages
 cat /vagrant/packages.txt | xargs sudo apt -y install
