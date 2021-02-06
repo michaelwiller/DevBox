@@ -26,7 +26,6 @@ $ROOT/script/setup
 [ $? -gt 0 ] && exit 1
 cd $ROOT
 
-vagrant status | grep "running" >> /dev/null && vagrant reload || vagrant up
 vagrant ssh -c "sudo /vagrant/provision.sh"
 
 #

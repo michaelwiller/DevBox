@@ -1,2 +1,1 @@
-
 [ -f $HOME/.config/secrets-set-env ] && source "$HOME/.config/secrets-set-env"
