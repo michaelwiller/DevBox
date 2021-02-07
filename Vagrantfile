@@ -1,7 +1,7 @@
 Vagrant.configure("2") do |config|
   $audio = "coreaudio"
   $audiocontroller = "hda" # choices: hda sb16 ac97
-  $vram = 1024
+  $vram = 256
   $memory = 12288
   $cpus = 6
 
