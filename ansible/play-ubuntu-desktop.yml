@@ -1,0 +1,8 @@
+- hosts: localhost
+  tasks:
+  - name: Ubuntu desktop - Install 
+    become: true
+    apt:
+      name: ubuntu-desktop
+      state: present
+      install_recommends: 'no'

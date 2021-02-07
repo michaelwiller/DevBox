@@ -1,3 +1,5 @@
 .ssh/
 *.log
 .vagrant
+.external-config/
+.config

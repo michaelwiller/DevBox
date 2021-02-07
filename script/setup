@@ -1,0 +1,40 @@
+#!/usr/bin/env bash 
+# Normalized script pattern: https://github.blog/2015-06-30-scripts-to-rule-them-all/ ( https://github.com/github/scripts-to-rule-them-all )
+# Set up project in initial state. To be run after initial clone.
+
+echo "==========================="
+echo "Running: script/setup"
+echo "==========================="
+echo " "
+echo " "
+
+
+# DIR points to the ./script directory. ROOT point to the repository root
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ROOT=$(cd $(dirname $DIR) && pwd)
+
+# Set up environment variables, if _env exists
+[ -f $DIR/_env ] && source $DIR/_env || echo "INFO: no environment .. continuing" 
+
+echo "Call script/bootstrap"
+$ROOT/script/bootstrap || exit 1
+ 
+# ============================================
+# Add setup code below
+#
+
+cd $ROOT
+
+[ ! -d .external-config/ssh ] && mkdir -p .external-config/ssh
+[ ! -d .external-config/env ] && mkdir -p .external-config/env
+
+cp $HOME/.ssh/* .external-config/ssh/
+cp $HOME/.config/secrets-set-env .external-config/env/
+
+#
+# END add setup code
+# ============================================
+
+echo "==========================="
+echo "done: script/setup"
+echo "==========================="

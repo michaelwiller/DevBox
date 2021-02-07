@@ -1,0 +1,32 @@
+- hosts: localhost
+  tasks:
+  - name: Kubernetes - minikube repository 
+    changed_when: false
+    shell: |
+      cd /tmp
+      curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube_latest_amd64.deb
+      sudo dpkg -i minikube_latest_amd64.deb
+      curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+      echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee -a /etc/apt/sources.list.d/kubernetes.list
+  - name: Kubernetes - Install minikube dependencies
+    become: true
+    shell: |
+      apt install libvirt-clients libvirt-daemon-system qemu-kvm
+      apt install libvirt-clients libvirt-daemon-system qemu-kvm
+      curl -LO https://storage.googleapis.com/minikube/releases/latest/docker-machine-driver-kvm2 && sudo install docker-machine-driver-kvm2 /usr/local/bin/
+
+  - name: Kubernetes - Update repository
+    become: true
+    apt:
+      update_cache: true
+
+  - name: Kubernetes - kubectl & minikube install
+    become: true
+    apt:
+      name: [ 'docker.io', kubectl', 'minikube', 'apt-transport-https', 'gnupg2', 'curl' ]
+      state: present
+
+  - name: Kubernetes - add vagrant to docker group
+    become: true
+    shell: |
+      usermod -aG docker vagrant

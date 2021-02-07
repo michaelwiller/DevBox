@@ -1,0 +1,83 @@
+#!/usr/bin/env bash 
+# Normalized script pattern: https://github.blog/2015-06-30-scripts-to-rule-them-all/ ( https://github.com/github/scripts-to-rule-them-all )
+# Fulfill project dependencies (ruby gems, npm packages, homebrew, git submodules...)
+
+print_status(){
+    printf "%30s : %s\n" "$1" "$2"
+}
+
+echo "==========================="
+echo "Running: script/bootstrap"
+echo "==========================="
+echo " "
+echo " "
+
+
+# DIR points to the ./script directory. ROOT point to the repository root
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ROOT=$(cd $(dirname $DIR) && pwd)
+
+# ============================================
+# Add bootstrapt code below
+#
+
+ERROR=false
+
+if which vagrant >> /dev/null; then
+    print_status "Vagrant" "OK"
+else
+    print_status "Vagrant" "NOT FOUND!"
+    ERROR_STRING="${ERROR_STRING}Vagrant not installed"
+    ERROR=true
+fi
+
+if [ -d $HOME/.ssh ]; then
+    count=$(ls $HOME/.ssh | wc -l)
+    if [ $count -gt 0 ]; then
+        print_status SSH OK
+    else
+        print_status SSH ERROR
+        ERROR_STRING="${ERROR_STRING}No ssh certificates found."
+        ERROR=true
+    fi
+fi
+
+if [ -f $HOME/.config/secrets-set-env ]; then
+    print_status "Env" "OK"
+else
+    print_status "Env" "ERROR"
+    ERROR_STRING="${ERROR_STRING}The \$HOME/.config/secrets-set-env not found\n"
+    exit 1
+fi
+
+
+# Set up environment variables, if _env exists
+[ -f $DIR/_env ] && source $DIR/_env
+
+if [ -z "$EDBREPO_USER" ]; then
+    ERROR_STRING="${ERROR_STRING}EDBREPO_USER must contain username for EDB Repositories\n"
+fi
+if [ -z "$EDBREPO_PWD" ]; then
+    ERROR_STRING="${ERROR_STRING}EDBREPO_PWD must contain password for EDB Repositories\n"
+fi
+if [ -z "$EDBREPO_USER" ]; then
+    ERROR_STRING="${ERROR_STRING}Q2NREPO_USER must contain username for 2ndQ Repositories\n"
+fi
+if [ -z "$EDBREPO_PWD" ]; then
+    ERROR_STRING="${ERROR_STRING}Q2NREPO_PWD must contain password for 2ndQ Repositories\n"
+fi
+ 
+if [ ! -z "$ERROR_STRING" ]; then
+    print_status "ENV" "ERROR"
+    printf "\nEnvironment errors:\n"
+    printf "$ERROR_STRING"
+    exit 1
+fi
+
+#
+# END add bootstrapt code 
+# ============================================
+
+echo "==========================="
+echo "done: script/bootstrap"
+echo "==========================="
