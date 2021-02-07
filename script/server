@@ -1,9 +1,27 @@
 #!/usr/bin/env bash 
 # Normalized script pattern: https://github.blog/2015-06-30-scripts-to-rule-them-all/ ( https://github.com/github/scripts-to-rule-them-all )
 # server is used to start the application.
+applyAnsible(){
+	b=$(basename $1)
+    vagrant ssh -c "cd /vagrant/ansible && ansible-playbook $b"
+}
+create-ansible-secret(){
+cat > $ROOT/ansible-secrets.yml <<ENDBLOCK 
+---
+edbrepo:
+  username: $EDBREPO_USER
+  password: $EDBREPO_PWD
+q2repo:
+  username: $Q2NREPO_USER
+  password: $Q2NREPO_PWD
+ENDBLOCK
+vagrant ssh -c "sudo mv /vagrant/ansible-secrets.yml /var/ansible-secrets.yml"
+}
 
+
+ALL_PARMS="$@"
 echo "==========================="
-echo "Running: script/server $@"
+echo "Running: script/server $ALL_PARMS"
 echo "==========================="
 echo " "
 echo " "
@@ -23,6 +41,7 @@ ROOT=$(cd $(dirname $DIR) && pwd)
 [ ! -d .external-config/env ] && mkdir -p .external-config/env
 
 [ $# -eq 0 ] && CMD=start || CMD=$1
+shift
 
 case $CMD in
 	start)
@@ -30,7 +49,18 @@ case $CMD in
 		$ROOT/script/setup
 		[ $? -gt 0 ] && exit 1
 		vagrant up
-		vagrant ssh -c "sudo /vagrant/install-all.sh"
+		create-ansible-secret
+		$DIR/server install ansible/run-all.yml
+		$DIR/server restart
+		;;
+	restart)
+		vagrant reload
+		;;
+	install)
+		for a in $@
+		do
+			applyAnsible $a
+		done
 		;;
 	stop)
 		vagrant halt
@@ -49,5 +79,5 @@ esac
 # ============================================
 
 echo "==========================="
-echo "done: script/server $@"
+echo "done: script/server $ALL_PARMS"
 echo "==========================="

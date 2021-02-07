@@ -1,0 +1,17 @@
+- hosts: localhost
+  tasks: 
+    - name:
+      include_vars:
+        file: /var/ansible-secrets.yml
+
+- name: Ubuntu desktop
+  import_playbook: play-ubuntu-desktop.yml
+
+- name: Google Chrome playbook
+  import_playbook: play-google-chrome.yml
+
+- name: Minikube playbook
+  import_playbook: play-kubernetes.yml
+
+- name: Upgrade
+  import_playbook: play-upgrade.yml

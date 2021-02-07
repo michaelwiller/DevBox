@@ -3,7 +3,7 @@ Vagrant.configure("2") do |config|
   $audiocontroller = "hda" # choices: hda sb16 ac97
   $vram = 256
   $memory = 12288
-  $cpus = 6
+  $cpus = 3
 
   if RUBY_PLATFORM =~ /darwin/
     $audio = "coreaudio"
@@ -20,9 +20,10 @@ Vagrant.configure("2") do |config|
     v.customize [
         "modifyvm", :id, 
         "--vram", $vram,
-        "--accelerate3d", "on",
+        "--accelerate3d", "off",
         '--audio', $audio, 
-        '--audiocontroller', $audiocontroller 
+        '--audiocontroller', $audiocontroller,
+        '--nested-hw-virt', 'on'
         ]
     v.memory = $memory
     v.cpus = $cpus

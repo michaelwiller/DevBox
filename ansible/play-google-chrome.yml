@@ -1,0 +1,20 @@
+- hosts: localhost
+  tasks: 
+  - name: Google Chrome - Signature
+    become: true
+    shell: |
+      wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+      echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list
+    args:
+      warn: false
+
+  - name: Google Chrome - Update repos
+    become: true
+    apt:
+      update_cache: true
+
+  - name: Google Chrome - Install google chrome
+    become: true
+    apt:
+      name: google-chrome-stable
+      state: present

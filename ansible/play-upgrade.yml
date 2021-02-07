@@ -1,0 +1,6 @@
+- hosts: localhost
+  tasks:
+    - name: Upgrade - update all packages
+      become: true
+      apt:
+        upgrade: 'yes'
